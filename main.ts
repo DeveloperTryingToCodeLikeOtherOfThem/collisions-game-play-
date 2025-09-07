@@ -77,11 +77,11 @@ game.onUpdate(() => {
 game.onUpdateInterval(randint(2000, 4000), () => {
    setTimeout(() => {
         yourSprite = sprites.create(assets.image`yourSpriteImage`, SpriteKind.Enemy)
-       yourSprite.setPosition(player.x + 10, player.y)
-       yourSprite.vx = -randint(20, 40)
+       yourSprite.setPosition(player.x + 40, player.y)
+       yourSprite.vx = -randint(5, 10)
    }, 2000)
 }) 
-
+ 
 game.onUpdate(() => {
     player.sayText("enemy spawning at " + yourSprite.x + yourSprite.y, 500, false)
 })
@@ -89,11 +89,15 @@ game.onUpdate(() => {
 game.onUpdate(() => {
     yourSprite.sayText("player is at" + player.x + player.y, 500, false)
 })
-
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, sprite => {
-    pause(1000)
-    info.changeLifeBy(-1)
-    sprite.say("you have" + " " + info.life() + " left", 1000)
+ let shot = false
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, (sprite: Sprite, otherSprite: Sprite) => {
+   if(shot) {
+       sprites.destroy(otherSprite)
+   } else { 
+       pause(1000)
+       info.changeLifeBy(-1)
+       sprite.say("you have" + " " + info.life() + " left", 1000)
+   }
 }) 
 
 info.onLifeZero(() => {
@@ -101,6 +105,15 @@ info.onLifeZero(() => {
     pauseUntil(() => controller.A.isPressed())
     control.reset()
 }) 
-
+ 
 // tell the user why the seconds can be underfined 
 game.showLongText("How to play this game, avoid the ducks and the trees are collision obstacle hitboxes that can make you block to hit other side because it has hitboxes bumping to you, good luck.", DialogLayout.Center)
+controller.A.onEvent(ControllerButtonEvent.Pressed, function() {
+    shot = true
+    animation.runImageAnimation(player, assets.animation`attackAnim`, 100, false)
+    if (player.overlapsWith(yourSprite)) {
+        sprites.destroy(yourSprite)
+    }
+    pause(700)
+    shot = false
+})
