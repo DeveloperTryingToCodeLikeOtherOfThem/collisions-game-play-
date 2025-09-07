@@ -106,8 +106,9 @@ info.onLifeZero(() => {
     control.reset()
 }) 
  
-// tell the user why the seconds can be underfined 
-game.showLongText("How to play this game, avoid the ducks and the trees are collision obstacle hitboxes that can make you block to hit other side because it has hitboxes bumping to you, good luck.", DialogLayout.Center)
+
+game.showLongText("How to play this game, avoid the ducks and the trees are collision obstacle hitboxes that can make you block to hit other side because it has hitboxes bumping to you, good luck, and also forgot to mention press a to attack if you press a the right time the enemy gets out of your way, and makes your lives save for longer period of time.", DialogLayout.Center)
+
 controller.A.onEvent(ControllerButtonEvent.Pressed, function() {
     shot = true
     animation.runImageAnimation(player, assets.animation`attackAnim`, 100, false)
